@@ -164,6 +164,20 @@ It runs the same Python that installed it, so pipx installs work as-is. Restart 
 | Shows the wrong player | Set `players` to the names from `ma-rpc players`. |
 | Flatpak/Snap Discord on Linux | The IPC socket may be inside the sandbox. Flatpak: `ln -sf $XDG_RUNTIME_DIR/app/com.discordapp.Discord/discord-ipc-0 $XDG_RUNTIME_DIR/discord-ipc-0` |
 
+## Reporting a problem or suggesting something
+
+Found a bug, or want a feature? [Open an issue](https://github.com/CrazyDiam0nd-gh/music-assistant-discord-rpc/issues/new/choose) and pick **Bug report** or **Feature request**. You need a free GitHub account.
+
+For a bug report, these make it much quicker to fix:
+
+1. `ma-rpc --version`, and your operating system.
+2. Play something, run `ma-rpc run --dry-run` for about 15 seconds, and paste what it prints. It shows what would be sent to Discord without needing Discord at all.
+3. Which player and music source you're using (for example the web UI with Spotify).
+
+**Never paste your Music Assistant token.** `config.json` contains it, so remove it before sharing any part of the file.
+
+Pull requests are welcome. For anything bigger than a small fix, open an issue first so we can agree on the approach.
+
 ## Development
 
 ```bash
