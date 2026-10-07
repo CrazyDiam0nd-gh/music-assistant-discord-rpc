@@ -33,7 +33,8 @@ def _install_linux():
         "After=network-online.target\n\n"
         f"[Service]\nType=simple\nExecStart={sys.executable} -m ma_rpc run\n"
         "Restart=on-failure\nRestartSec=10\n\n"
-        "[Install]\nWantedBy=default.target\n"
+        "[Install]\nWantedBy=default.target\n",
+        encoding="utf-8",
     )
     _run("systemctl", "--user", "daemon-reload", check=True)
     _run("systemctl", "--user", "enable", "--now", f"{NAME}.service", check=True)

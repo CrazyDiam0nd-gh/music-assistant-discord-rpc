@@ -20,7 +20,7 @@ def test_env_token_and_save_roundtrip(tmp_path, monkeypatch):
     assert cfg["music_assistant"]["token"] == "from-env"
     cfg["players"] = ["Kitchen"]
     config.save(cfg)
-    assert json.loads((tmp_path / "config.json").read_text())["players"] == ["Kitchen"]
+    assert json.loads((tmp_path / "config.json").read_text(encoding="utf-8"))["players"] == ["Kitchen"]
     assert config.validate(cfg)  # application_id empty
 
 
