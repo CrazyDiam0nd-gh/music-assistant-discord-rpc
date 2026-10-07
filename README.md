@@ -9,6 +9,8 @@
 
 Show what's playing in [Music Assistant](https://music-assistant.io) as your **Discord Rich Presence**: title, artist, album, cover art and a live progress bar, shown as "Listening to ...".
 
+<p align="center"><img src="docs/screenshot.png" alt="Discord showing 'Listening to' with the track, artist, album, cover art and progress bar" width="318"></p>
+
 Works on **Linux**, **Windows** and **macOS**. Install, answer a few questions, done.
 
 ```
