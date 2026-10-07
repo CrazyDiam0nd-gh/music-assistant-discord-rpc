@@ -23,6 +23,9 @@ DEFAULTS = {
         "large_text": "{album}",
         "show_cover": True,
         "show_progress": True,
+        # Keep presence up while paused (players that report "paused"; browser players report "idle").
+        "show_paused": True,
+        "paused_state": "⏸ Paused · {artist}",
         # Optional: replaces the app name shown after "Listening to".
         "name": "",
     },

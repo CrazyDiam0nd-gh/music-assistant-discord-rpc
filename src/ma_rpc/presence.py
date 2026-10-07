@@ -3,15 +3,20 @@ import re
 import string
 
 
-def select_player(players: list, wanted: list):
-    """First available, playing player with media. `wanted` empty = any player."""
+def select_player(players: list, wanted: list, include_paused: bool = False):
+    """First available player with media that is playing (or paused, if `include_paused`).
+
+    `wanted` empty = any player. A playing player always wins over a paused one.
+    """
     names = {w.casefold() for w in wanted}
-    for p in players:
-        if names and (p.get("display_name") or "").casefold() not in names:
-            continue
-        if p.get("available") and p.get("playback_state") == "playing" and p.get("current_media"):
-            return p
-    return None
+    states = ("playing", "paused") if include_paused else ("playing",)
+    candidates = [
+        p for p in players
+        if (not names or (p.get("display_name") or "").casefold() in names)
+        and p.get("available") and p.get("playback_state") in states and p.get("current_media")
+    ]
+    candidates.sort(key=lambda p: p["playback_state"] != "playing")  # stable: playing first
+    return candidates[0] if candidates else None
 
 
 def start_timestamp(player: dict, now: float) -> int:
@@ -74,14 +79,18 @@ def build_activity(cfg: dict, player: dict, cover, now: float) -> dict:
         "album": media.get("album") or "",
         "album_artist": media.get("album_artist") or "",
     }
+    paused = player.get("playback_state") == "paused"
     activity = {}
-    for key, tmpl_key in (("details", "details"), ("state", "state"), ("large_text", "large_text")):
-        value = render(disp.get(tmpl_key, ""), fields)
+    templates = (("details", disp.get("details", "")),
+                 ("state", disp.get("paused_state", "") if paused else disp.get("state", "")),
+                 ("large_text", disp.get("large_text", "")))
+    for key, template in templates:
+        value = render(template, fields)
         if value:
             activity[key] = value
     if disp.get("name"):
         activity["name"] = disp["name"][:128]
-    if disp.get("show_progress", True):
+    if disp.get("show_progress", True) and not paused:
         start = start_timestamp(player, now)
         activity["start"] = start
         if media.get("duration"):

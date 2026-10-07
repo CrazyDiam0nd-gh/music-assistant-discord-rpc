@@ -73,7 +73,9 @@ ma-rpc install-service
 | Progress bar | elapsed / duration, kept in sync across seeks and skips |
 | Cover art | album art when Discord can fetch it (see below) |
 
-Presence clears when playback pauses or stops.
+Presence clears when playback stops. While **paused**, it stays up showing "⏸ Paused · artist" with no progress bar (set `display.show_paused` to `false` to clear it instead).
+
+> Browser players, such as the Music Assistant web UI, report a pause as `idle`, the same as a stop, so for those the presence clears on pause. Other players that report `paused` use the paused display.
 
 ### Cover art
 
@@ -116,6 +118,8 @@ Discord's servers download the image, so the cover has to be at a public interne
     "large_text": "{album}",
     "show_cover": true,
     "show_progress": true,
+    "show_paused": true,
+    "paused_state": "⏸ Paused · {artist}",
     "name": ""                        // optional: replaces the app name after "Listening to"
   },
   "jellyfin": {                       // all optional
@@ -170,6 +174,16 @@ pytest
 ```
 
 The pure logic (player selection, timestamps, templates, cover URL handling) lives in `src/ma_rpc/presence.py` and is unit-tested; CI runs the tests on Linux, Windows and macOS.
+
+## Credits
+
+- Inspired by [jellyfin-rpc](https://github.com/Radiicall/jellyfin-rpc) by Radiicall, which shows Jellyfin playback on Discord. Its guided setup and its per-OS way of running in the background (systemd, launchd, Windows) shaped how this project is set up. jellyfin-rpc is GPL-3.0 and no code from it is used here. This project is separate and MIT-licensed.
+- Built on [pypresence](https://github.com/qwertyquerty/pypresence) for the Discord connection and [websockets](https://github.com/python-websockets/websockets) for the Music Assistant API.
+- [Music Assistant](https://music-assistant.io) is the open-source music server this talks to.
+
+## Disclaimer
+
+This is an unofficial community project. It is not affiliated with, endorsed by, or sponsored by Music Assistant, the Open Home Foundation, Discord, or Jellyfin. Names and logos are trademarks of their respective owners and are used here only to describe what the tool works with.
 
 ## License
 

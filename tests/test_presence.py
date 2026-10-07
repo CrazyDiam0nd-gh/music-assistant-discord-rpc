@@ -18,6 +18,16 @@ def test_select_player_any_and_by_name():
     assert select_player([{**PLAYER, "available": False}], []) is None
 
 
+def test_paused_player_and_activity():
+    paused = {**PLAYER, "playback_state": "paused"}
+    assert select_player([paused], []) is None  # not shown unless asked
+    assert select_player([paused], [], include_paused=True) is paused
+    other = {**PLAYER, "display_name": "Den"}
+    assert select_player([paused, other], [], include_paused=True) is other  # playing wins
+    act = build_activity(config.load(), paused, None, 1010.0)
+    assert act["state"] == "⏸ Paused · Band" and "start" not in act and "end" not in act
+
+
 def test_start_timestamp_handles_missing_update_time():
     assert start_timestamp(PLAYER, 1010.0) == 1010 - 40
     assert start_timestamp({**PLAYER, "elapsed_time_last_updated": None}, 1010.0) == 1010 - 30

@@ -18,20 +18,22 @@ async def _session(cfg: dict, dry_run: bool):
     def log(msg):
         print(msg, flush=True)
 
-    shown = None  # (uri, start) last sent
+    shown = None  # (uri, start, paused) last sent
     cover = None
     jellyfin_on = bool(cfg["jellyfin"]["url"] and cfg["jellyfin"]["api_key"])
     async with MAClient(cfg["music_assistant"]["url"], cfg["music_assistant"]["token"]) as ma:
         log(f"connected to Music Assistant {ma.server_info.get('server_version', '?')}")
         while True:
-            player = select_player(await ma.players(), cfg["players"])
+            player = select_player(await ma.players(), cfg["players"], cfg["display"].get("show_paused", True))
             if player and jellyfin_on and await asyncio.to_thread(jellyfin.is_playing, cfg):
                 player = None  # Jellyfin has priority
             if player:
                 media = player["current_media"]
                 now = time.time()
                 start = start_timestamp(player, now)
-                if shown is None or shown[0] != media["uri"] or abs(shown[1] - start) > 3:
+                paused = player["playback_state"] == "paused"
+                if (shown is None or shown[0] != media["uri"] or shown[2] != paused
+                        or (not paused and abs(shown[1] - start) > 3)):
                     if shown is None or shown[0] != media["uri"]:
                         cover = None
                         if cfg["display"].get("show_cover", True):
@@ -45,7 +47,7 @@ async def _session(cfg: dict, dry_run: bool):
                         log(json.dumps(activity, ensure_ascii=False))
                     else:
                         await rpc.update(activity_type=ActivityType.LISTENING, **activity)
-                    shown = (media["uri"], start)
+                    shown = (media["uri"], start, paused)
             elif shown:
                 if dry_run:
                     log("(cleared)")
