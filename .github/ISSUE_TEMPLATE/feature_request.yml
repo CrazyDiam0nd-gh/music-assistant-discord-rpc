@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest an improvement or a new option
+labels: [enhancement]
+body:
+  - type: textarea
+    id: want
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why do you want it?
+      description: What are you trying to do that is hard or impossible right now?
+  - type: textarea
+    id: alt
+    attributes:
+      label: Anything you've tried instead?

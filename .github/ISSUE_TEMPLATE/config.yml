@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Music Assistant itself (not this tool)
+    url: https://music-assistant.io/
+    about: Problems with Music Assistant playback, providers or players belong with the Music Assistant project.

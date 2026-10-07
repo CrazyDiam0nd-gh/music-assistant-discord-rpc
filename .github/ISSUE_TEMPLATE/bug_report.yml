@@ -1,0 +1,65 @@
+name: Bug report
+description: Something doesn't work, or shows the wrong thing on Discord
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. The more of the fields below you fill in, the faster this can be fixed.
+
+        **Never paste your token.** `config.json` contains your Music Assistant token, so remove or blank it before sharing any part of it.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what did you see instead? A screenshot of your Discord profile helps.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ma-rpc version
+      description: Output of `ma-rpc --version`
+      placeholder: ma-rpc 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Linux, Windows, macOS, Other]
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version and install method
+      description: For example "Python 3.12, installed with pipx"
+  - type: input
+    id: ma
+    attributes:
+      label: Music Assistant version and how it runs
+      placeholder: 2.10.5, Home Assistant add-on
+  - type: input
+    id: player
+    attributes:
+      label: Player and music source
+      description: Which player (for example the web UI, a speaker, a Cast device) and where the track comes from (Spotify, Jellyfin, local files, ...)
+  - type: textarea
+    id: dryrun
+    attributes:
+      label: Output of `ma-rpc run --dry-run`
+      description: Play something, run this for about 15 seconds, then paste what it printed. It shows what would be sent to Discord, without touching Discord.
+      render: text
+  - type: textarea
+    id: logs
+    attributes:
+      label: Service logs (if you use `install-service`)
+      description: "Linux: `journalctl --user -u ma-rpc -n 50`. macOS: `~/.config/ma-rpc/ma-rpc.log`."
+      render: text
+  - type: textarea
+    id: config
+    attributes:
+      label: Config (token removed)
+      description: Output of `ma-rpc config-path` tells you where the file is. Remove the token first.
+      render: json
