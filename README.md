@@ -2,6 +2,11 @@
 
 <h1 align="center">Music Assistant Discord Rich Presence</h1>
 
+<p align="center">
+  <a href="https://github.com/CrazyDiam0nd-gh/music-assistant-discord-rpc/actions/workflows/ci.yml"><img src="https://github.com/CrazyDiam0nd-gh/music-assistant-discord-rpc/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+</p>
+
 Show what's playing in [Music Assistant](https://music-assistant.io) as your **Discord Rich Presence**: title, artist, album, cover art and a live progress bar, shown as "Listening to ...".
 
 Works on **Linux**, **Windows** and **macOS**. Install, answer a few questions, done.
@@ -72,11 +77,11 @@ Presence clears when playback pauses or stops.
 
 ### Cover art
 
-Discord's servers load the image, so it has to be a public URL:
+Discord's servers download the image, so the cover has to be at a public internet address. How that works depends on where the track comes from in Music Assistant:
 
-- **Spotify, Tidal, Qobuz, etc.:** works automatically.
-- **Jellyfin library:** Music Assistant only knows your server's LAN address (with an API key in the URL, which this tool never sends to Discord). Set `jellyfin.public_url` to the address your Jellyfin server has on the internet and the cover is rewritten to use it.
-- **Other local libraries (filesystem, SMB):** no public URL exists, so no cover is shown.
+- **Streaming services with public images:** covers work automatically. Tested with Spotify; other services that give Music Assistant a public `https://` image should behave the same.
+- **Local libraries (filesystem, SMB, ...):** these have no public address, so no cover is shown. Everything else still works.
+- **Jellyfin as a music source (optional):** Music Assistant only knows your Jellyfin server's local address, with an API key in the URL. Discord can't reach that, and the key must never be shared. If your Jellyfin server is also reachable from the internet, set `jellyfin.public_url` to that address and ma-rpc points the cover there instead, dropping the key. If you don't use Jellyfin, ignore this.
 
 ## Commands
 
