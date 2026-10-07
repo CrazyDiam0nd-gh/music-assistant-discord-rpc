@@ -17,9 +17,13 @@ def select_player(players: list, wanted: list):
 def start_timestamp(player: dict, now: float) -> int:
     """Unix time the track 'started', so Discord's progress bar lines up.
 
-    MA briefly reports elapsed_time_last_updated=None right after a skip.
+    Uses the current media's position: the player's own elapsed_time restarts near 0 on every
+    resume (browser players), so it is only a fallback. MA also briefly reports
+    elapsed_time_last_updated=None right after a skip.
     """
-    elapsed = (player.get("elapsed_time") or 0) + (now - (player.get("elapsed_time_last_updated") or now))
+    media = player.get("current_media") or {}
+    src = media if media.get("elapsed_time") is not None and media.get("elapsed_time_last_updated") else player
+    elapsed = (src.get("elapsed_time") or 0) + (now - (src.get("elapsed_time_last_updated") or now))
     return int(now - elapsed)
 
 

@@ -24,6 +24,13 @@ def test_start_timestamp_handles_missing_update_time():
     assert start_timestamp({"elapsed_time": None, "elapsed_time_last_updated": None}, 500.0) == 500
 
 
+def test_start_timestamp_prefers_media_position_over_resetting_player_clock():
+    # Browser players restart player.elapsed_time near 0 on resume; media position is the real one.
+    p = {**PLAYER, "elapsed_time": 1.2, "elapsed_time_last_updated": 1000.0,
+         "current_media": {**PLAYER["current_media"], "elapsed_time": 155.0, "elapsed_time_last_updated": 1000.0}}
+    assert start_timestamp(p, 1010.0) == 1010 - 165
+
+
 def test_render_missing_and_short():
     assert render("{title} - {artist}", {"title": "A", "artist": "B"}) == "A - B"
     assert render("{nope}x", {}) is None  # too short for Discord
