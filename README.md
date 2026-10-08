@@ -18,6 +18,16 @@ $ ma-rpc setup
 $ ma-rpc install-service     # starts automatically at login
 ```
 
+## Why this exists
+
+The Music Assistant Companion desktop app has its own Discord Rich Presence, and if that is all you need, you may not need this project. I made this one mainly because **the Companion app does not show cover art for Jellyfin libraries**, and I wanted covers.
+
+Discord's servers download the cover themselves, so it has to be at a public internet address. The Companion app only passes along images that Music Assistant marks as publicly reachable. Music Assistant's Jellyfin provider marks every Jellyfin image as not public (it only knows your server's local address, with an API key in the URL), so a Jellyfin track gets no cover in the Companion app's presence. Its developers describe the same limit for local sources in the pull request that added artwork: *"Still won't work with local filesystem, SMB, other local-providers"* ([desktop-app #136](https://github.com/music-assistant/desktop-app/pull/136)). This was checked against Companion app 0.6.9 in October 2026; it may change.
+
+ma-rpc handles Jellyfin by taking the item id from Music Assistant's local image URL and building the public one from your own Jellyfin address (`jellyfin.public_url`), leaving the API key out. That only works if your Jellyfin server is also reachable from the internet, because Discord has to fetch the picture. With a LAN-only server no cover can be shown by any tool. See [Cover art](#cover-art).
+
+It also runs as a small background service without the desktop app, if you would rather not run the app just for the presence.
+
 ## Requirements
 
 - Music Assistant 2.x reachable from the PC running Discord (the Home Assistant add-on works; default port `8095`)
